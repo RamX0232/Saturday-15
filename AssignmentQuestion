@@ -1,0 +1,161 @@
+import React, { useContext, useMemo } from 'react';
+import { ListContext } from './ListContext';
+
+const ItemList = () => {
+  const { state, dispatch } = useContext(ListContext);
+
+  // Use useMemo to optimize re-rendering
+  const memoizedItems = useMemo(() => {
+    return state;
+  }, [state]);
+
+  const handleRemoveItem = (id) => {
+    dispatch({ type: 'REMOVE_ITEM', payload: id });
+  };
+
+  return (
+    <div>
+      <h3>Items List ({memoizedItems.length})</h3>
+      <ul>
+        {memoizedItems.map(item => (
+          <li key={item.id}>
+            {item.name}
+            <button onClick={() => handleRemoveItem(item.id)}>Remove</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default ItemList;
+
+
+import React, { useState, useContext } from 'react';
+import { ListContext } from './ListContext';
+
+const AddItem = () => {
+  const { dispatch } = useContext(ListContext);
+  const [newItem, setNewItem] = useState('');
+
+  const handleAddItem = () => {
+    if (newItem.trim()) {
+      const newItemObject = { id: Date.now(), name: newItem };
+      dispatch({ type: 'ADD_ITEM', payload: newItemObject });
+      setNewItem('');
+    }
+  };
+
+  return (
+    <div>
+      <input
+        type="text"
+        value={newItem}
+        onChange={(e) => setNewItem(e.target.value)}
+        placeholder="Enter new item"
+      />
+      <button onClick={handleAddItem}>Add Item</button>
+    </div>
+  );
+};
+
+export default AddItem;\
+
+
+/* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f9;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+}
+
+/* Container for the app */
+div {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Add Item Section */
+input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Item List Section */
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  font-size: 16px;
+}
+
+li:last-child {
+  border-bottom: none;
+}
+
+button {
+  padding: 5px 10px;
+  background-color: #f44336;
+  border: none;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+button:hover {
+  background-color: #e53935;
+}
+
+/* Item Count */
+h3 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
